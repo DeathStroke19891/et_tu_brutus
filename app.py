@@ -15,14 +15,14 @@ def login():
     response.headers['Authorization'] = f'Bearer {access_token}'
     return response
 
-
 @app.route("/protected", methods=["GET"])
-@jwt_required()
 def protected():
-    current_user_id = get_jwt_identity()
-    if current_user_id == 1:
-        response = make_response(render_template('protected.html'))
-        return response
-    else:
+    current_user_id = 0
+    try:
+        current_user_id = get_jwt_identity()
+        if current_user_id == 1:
+            response = make_response(render_template('protected.html'))
+            return response
+    except:
         response = make_response(render_template('impaler.html'))
         return response
