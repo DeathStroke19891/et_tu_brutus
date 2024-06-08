@@ -1,7 +1,7 @@
 from flask import Flask, render_template, make_response
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, verify_jwt_in_request
 
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "1337"
@@ -16,10 +16,13 @@ def login():
     return response
 
 @app.route("/protected", methods=["GET"])
+
 def protected():
     current_user_id = 0
     try:
+        verify_jwt_in_request()
         current_user_id = get_jwt_identity()
+        print("I am coming here")
         if current_user_id == 1:
             response = make_response(render_template('protected.html'))
             return response
